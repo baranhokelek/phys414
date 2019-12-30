@@ -1,11 +1,6 @@
-% if you have a percent symbol, that line is commenting like in programming languages. it does not do anything.
 
-% here, i specify the general style of the document. 
-% you can play with it to see what changes, for example try removing twocolumn
 \documentclass[aps,twocolumn,showpacs,preprintnumbers,nofootinbib,prl,superscriptaddress,groupedaddress]{revtex4-2}
 
-% here are some "packages", basically utilities i need in this document. not all documents need all
-% packages
 \usepackage{amssymb,graphicx}
 \usepackage{amsmath}
 \usepackage{multirow}
@@ -16,20 +11,19 @@
 \usepackage{hyperref}
 \usepackage{enumitem}
 \usepackage{graphicx}
+\usepackage{float}
 
-% you can define your own shortcuts etc, if you use sth very often
+
 \newcommand{\balign}{\begin{align}}
 \newcommand{\ealign}{\end{align}}
 
-% or you can define your own symbols, check what this is
 \def\meff{m_{\textrm{eff}}}
 
 
-% here is where the document begins
 \begin{document}
 
 \title{PHYS414/514 Final Project}
-\author{Baran Berkay H\"okelek} % turkish characters require special handling
+\author{Baran Berkay H\"okelek} 
 \affiliation{Department of Physics, Ko\c{c} University, \\
 Rumelifeneri Yolu, 34450 Sariyer, Istanbul, Turkey }
 \date{\today}
@@ -125,14 +119,123 @@ In this project, the structures of various stars are calculated with Newtonian M
     \end{align}
     which results in the relation:
     \begin{equation}
-        M = 4\pi \left(\frac{K(n+1)}{G}\right)^{-n} \xi_{n}^{-(1+n)} {\theta '(\xi_{n})}^{1-n} R^{\frac{3-n}{1-n}}
+        M = (4\pi)^{\frac{1}{1-n}} \left(\frac{K(n+1)}{G}\right)^{\frac{n}{n-1}} \xi_{n}^{\frac{n+1}{n-1}} (-\theta '(\xi_{n}) ) R^{\frac{3-n}{1-n}}
     \end{equation}
-    \item The Phython code for extracting the $.csv$ file can be found in the Supplementary Material. The $M$ vs $R$ plot of the white dwarfs is included in Figure 1.
-    \begin{figure}[h] 
+    \item The Python code for extracting the $.csv$ file can be found in the Supplementary Material. The $M$ vs $R$ plot of the white dwarfs is included in Figure 1.
+    \begin{figure}[H] 
     \centering
     \includegraphics[width=0.5\textwidth]{WDMR.jpg}
     \caption{M-R plot of low-temperature white dwarfs.}
     \end{figure}
+    \item The series expansion (obtained by Mathematica) for the polytropic approximation of pressure is:
+    \begin{align}
+        P = \frac{Cx^{5}}{5} + \mathcal{O}(x^{6}) \nonumber \\
+        \simeq \frac{8C}{5D^{{5} / {q}}} \rho^{1 + \frac{1}{{q} / {(5-q)}}}
+    \end{align}
+    which yields the constants $K_{*}$ and $n_{*}$.
     
+    After making the appropriate fit, $q$ seems to be fluctuating around $3$, as seen in Figure 2. Since we know from theory that $q$ is an integer, we can deduce that $q$ is exactly equal to 3.
+    \begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{mrq.png}
+    \caption{a) M-R plot(light blue), low-mass fit(other colors). b) log-log plots.}
+    \end{figure}
+    
+    After obtaining the specific value of $q$, and subsequently $n_{*}$, another fitting reveals the value of $K_{*}$, which turns out to be $\approx 2.83 \times 10^{12}$ cm$^{4}$ g$^{-\frac{2}{3}}$ s$^{-2}$. 
+    
+    \begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{Kval.png}
+    \caption{M-R plot(blue), $K_{*}$ fit (red)}
+    \end{figure}
+    
+    Central density $\rho_{c}$ has the formula:
+    \begin{equation}
+        \rho_{c} = \frac{M}{4\pi R^{3}} \frac{\xi_{n}^{3}}{\left(-\xi^{2} \theta'(\xi)\right)_{\xi=\xi_{n}}}
+    \end{equation}
+    
+    $\xi_{n}$ and $\left(-\xi^{2} \theta'(\xi)\right)_{\xi=\xi_{n}}$ can be obtained by solving the Lane-Emden Equation. After substituting the appropriate values, we find $\rho_{c}$ to be proportional to $M^2$, which can be seen in Figure 4.
+    
+    \begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{rhoc.png}
+    \caption{mass-density plot(blue), $M^2$ fit (red)}
+    \end{figure}    
+    
+    \item In my calculations, I chose $\rho_{c}$ in a range between $(10^{5}, 10^{9})$, and possible $D$ values between $(10^{6}, 10^{7})$. The $D$ value that gave the least RMS error was $D = 3.71 \times 10^{6}$ g cm$^{3}$, and subsequently, $C = 1.60 \times 10^{23}$ g cm$^{-1}$ s$^{-2}$. The theoretical values are $C = 6.00 \times 10^{22}$  g cm$^{-1}$ s$^{-2}$ and $D = 2.00 \times 10^{6}$ g cm$^{3}$.
+    
+    \begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{D371.png}
+    \caption{mass-density plot(blue), $D=3.71 \times 10^{6}$ fit(red)}
+    \end{figure} 
+    
+    An interesting phenomenon occurs when I set K near its theoretical value, which is $3.04 \times 10^{12}$ cm$^{4}$ g$^{-\frac{2}{3}}$ s$^{-2}$, the plot fits much better, and the errors in $C \& D$ are significantly reduced ($D$, from 66.5\% to 13\%, C from 166\% to 17.1\%)
+
+    \begin{figure}[h] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{D2.png}
+    \caption{mass-density plot(blue), $D=2.00 \times 10^{6}$ fit(red)}
+    \end{figure}   
+    
+    \item After plotting a number of $\rho_{c}$ values between $10^{10}$ and $10^{15}$, I fount the maximum mass for which there is a solution to the white dwarf equation is around $1.39M_{\odot}$, which is in accordance with the currently accepted Chandrasekhar limit, which is $1.4M_{\odot}$. The M-R relationship can be seen in Figure 7.
+    
+    \begin{figure}[H] 
+    \centering
+    \includegraphics[width=0.5\textwidth]{chandra_m.png}
+    \caption{mass-radius plot for various $\rho_{c}$ values.}
+    \end{figure}      
+    
+\section{Einstein}
+
+
+    \begin{enumerate}[label=(\alph*)]
+        \item The mass-radius curve for NSs is presented in Figure 8.
+        \begin{figure}[H] 
+        \centering
+        \includegraphics[width=0.5\textwidth]{MRNS50.png}
+        \caption{M-R plot for neutron stars with $K_{NS} = 50$.}
+        \end{figure} 
+        
+        \item The fractional binding energy($\Delta$)-radius curve for NSs is presented in Figure 9.
+        
+        \begin{figure}[H] 
+        \centering
+        \includegraphics[width=0.5\textwidth]{deltaMNS50.png}
+        \caption{$\Delta$-R plot for neutron stars with $K_{NS} = 50$.}
+        \end{figure}         
+        
+        \item The mass-central density($\rho_{c}$) curve for NSs is presented in Figure 10. The maximum stable mass for which the solution exists is $1.41M_{\odot}$ when $K_{NS} = 50$.
+        
+        \begin{figure}[H] 
+        \centering
+        \includegraphics[width=0.5\textwidth]{MrhoNS50.png}
+        \caption{M-$\rho_{c}$ plot for neutron stars with $K_{NS} = 50$.}
+        \end{figure} 
+        
+        \item All $K_{NS}$ values up to (and including) 115 have a maximum mass that is smaller than $2.14M_{\odot}$, so any $K_{NS}$ value up to 115 is allowed. The M-R, $\Delta-R$ and M-$\rho_{c}$ curves for $K_{NS} = 115$ are presented in Figures 11, 12 and 13.
+        
+        \begin{figure}[H] 
+        \centering
+        \includegraphics[width=0.5\textwidth]{kns1151.png}
+        \caption{M-R plot for neutron stars with $K_{NS} = 115$.}
+        \end{figure} 
+        
+        \begin{figure}[H] 
+        \centering
+        \includegraphics[width=0.5\textwidth]{kns1152.png}
+        \caption{$\Delta$-R plot for neutron stars with $K_{NS} = 115$.}
+        \end{figure} 
+        
+        
+        \begin{figure}[H] 
+        \centering
+        \includegraphics[width=0.5\textwidth]{kns1153.png}
+        \caption{M-$\rho_{c}$ plot for neutron stars with $K_{NS} = 115$.}
+        \end{figure} 
+        
+        
+        \item When $(r > R)$, $\Bar{\nu}(r) = \ln{\left( 1-\frac{2M}{r} \right)}$. Since $\Bar{\nu}(R) = \ln{\left( 1-\frac{2M}{R} \right)}$, we can add and subtract $\pm \left(\Bar{\nu}(R) - \ln{\left( 1-\frac{2M}{R} \right)}\right)$ without changing the value.
+    \end{enumerate}
 \end{enumerate}
 \end{document}
