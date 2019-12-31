@@ -1,0 +1,16 @@
+- when plotting data, do not connect the points, just show them (fig.1)
+
+- if the theoretical value gives a better fit, why does your fitting scheme not
+find it?
+
+- why are there kinks in fig.7?
+
+- K>115 are allowed, not below.
+
+- beyond einstein missing.
+
+- style: not much commenting in the code, and not much modularity either. 
+it would be hard for an outsider to see what you are doing. also, you have
+a veery long piece commented out in newton, which is bad for style.
+
+- grade: 30/40
